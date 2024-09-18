@@ -1,19 +1,31 @@
 class Player {
     constructor(x, y, imageSrc) {
-        this.x = x; // Spielerposition auf der Karte (nicht auf dem Canvas)
+        this.x = x; // Spielerposition auf der Karte
         this.y = y;
         this.image = new Image();
-        this.image.src = imageSrc; // Quelle des Charakterbilds
+        this.image.src = imageSrc; // Quelle des Spritesheets
+        this.frameWidth = 0; // Breite eines Frames (wird später festgelegt)
+        this.frameHeight = 0; // Höhe eines Frames (wird später festgelegt)
     }
 
     draw(ctx, canvasWidth, canvasHeight) {
-        // Zeichne den Spieler in der Mitte des Canvas
+        // Festlegen der Frame-Größe, wenn das Bild geladen ist
+        if (this.image.width > 0 && this.image.height > 0) {
+            this.frameWidth = this.image.width / 4;  // Breite eines Sprites (1/4 der Gesamtbreite)
+            this.frameHeight = this.image.height;    // Höhe eines Sprites
+        }
+
+        // Zeichne den ersten Sprite (Ausschnitt) des Spritesheets
         ctx.drawImage(
             this.image,
-            canvasWidth / 2 - this.image.width / 2,
-            canvasHeight / 2 - this.image.height / 2
+            0, 0, // Startpunkt des Ausschnitts (erste Figur)
+            this.frameWidth, this.frameHeight, // Breite und Höhe des Ausschnitts
+            canvasWidth / 2 - (this.frameWidth / 4) / 2, // X-Position auf dem Canvas
+            canvasHeight / 2 - this.frameHeight / 2, // Y-Position auf dem Canvas
+            this.frameWidth, // Zeichengröße: Breite
+            this.frameHeight // Zeichengröße: Höhe
         );
-    }
+    }    
 }
 
 // Exportiere die Player-Klasse

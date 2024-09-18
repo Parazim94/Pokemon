@@ -10,24 +10,7 @@ class GameMap {
         // Zeichne die Karte basierend auf dem aktuellen Offset
         ctx.drawImage(this.image, this.offsetX, this.offsetY);
     }
-
-    updateOffset(direction, speed) {
-        // Aktualisiere den Karten-Offset basierend auf der Spielerbewegung
-        switch (direction) {
-            case 'up':
-                this.offsetY += speed;
-                break;
-            case 'down':
-                this.offsetY -= speed;
-                break;
-            case 'left':
-                this.offsetX += speed;
-                break;
-            case 'right':
-                this.offsetX -= speed;
-                break;
-        }
-    }
 }
 
+// Exportiere die GameMap-Klasse
 export default GameMap;

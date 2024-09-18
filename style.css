@@ -1,4 +1,4 @@
-html, body {
+/*html, body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -7,7 +7,7 @@ html, body {
   canvas {
     display: block;
     width: 100vw; /* Volle Breite des Viewports */
-    height: 100vh; /* Volle Höhe des Viewports */
-  }
+  /*  height: 100vh; /* Volle Höhe des Viewports */
+  
   
   

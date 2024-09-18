@@ -1,3 +1,4 @@
+// js/game.js
 import Player from './player.js'; // Importiere die Player-Klasse
 import GameMap from './map.js';   // Importiere die GameMap-Klasse
 
@@ -5,61 +6,70 @@ import GameMap from './map.js';   // Importiere die GameMap-Klasse
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;  // Breite des Spiels
-canvas.height = window.innerHeight; // Höhe des Spiels
+// Setze eine feste Canvas-Größe
+canvas.width = 1024;  // Feste Breite des Canvas
+canvas.height = 576;  // Feste Höhe des Canvas
 
 // Spieler und Karte initialisieren
-const player = new Player(400, 400, './images/character-pictures/playerDown.png');
-const gameMap = new GameMap('./images/map-pictures/zoom-map.png', -700, -1200);
+const player = new Player(800, 600, './images/character-pictures/playerDown.png');
+const gameMap = new GameMap('./images/map-pictures/zoom-map2.png', -660, -1300);
 
-// Zeichenfunktion für das Spiel
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Canvas löschen
-    gameMap.draw(ctx); // Karte zeichnen
-    player.draw(ctx, canvas.width, canvas.height); // Spieler zeichnen
-}
-
-// Fenstergrößenänderung abfangen
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    draw();
-});
+// Bewegung des Spielers
+const keys = {
+    w: false,
+    a: false,
+    s: false,
+    d: false,
+};
 
 // Spielerbewegung abfangen
 window.addEventListener('keydown', (e) => {
-    const speed = 8; // Bewegungsgeschwindigkeit
-    let moved = false;
-
-    switch (e.key) {
-        case 'ArrowUp':
-            player.y -= speed;
-            gameMap.updateOffset('up', speed);
-            moved = true;
-            break;
-        case 'ArrowDown':
-            player.y += speed;
-            gameMap.updateOffset('down', speed);
-            moved = true;
-            break;
-        case 'ArrowLeft':
-            player.x -= speed;
-            gameMap.updateOffset('left', speed);
-            moved = true;
-            break;
-        case 'ArrowRight':
-            player.x += speed;
-            gameMap.updateOffset('right', speed);
-            moved = true;
-            break;
-    }
-
-    if (moved) {
-        draw(); // Neuzeichnen, nachdem der Spieler bewegt wurde
+    if (keys.hasOwnProperty(e.key.toLowerCase())) {
+        keys[e.key.toLowerCase()] = true;
     }
 });
 
-// Karte und Spieler zeichnen, sobald alle Bilder geladen sind
+window.addEventListener('keyup', (e) => {
+    if (keys.hasOwnProperty(e.key.toLowerCase())) {
+        keys[e.key.toLowerCase()] = false;
+    }
+});
+
+// Zeichen- und Aktualisierungsfunktion (Game Loop)
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Canvas löschen
+    ctx.fillStyle = 'white'; // Hintergrundfarbe setzen
+    ctx.fillRect(0, 0, canvas.width, canvas.height); // Hintergrund zeichnen
+
+    const speed = 4;
+
+    // Bewegung basierend auf Tastendrücken
+    if (keys.w) {
+        player.y -= speed;
+        gameMap.offsetY += speed;
+    }
+    if (keys.s) {
+        player.y += speed;
+        gameMap.offsetY -= speed;
+    }
+    if (keys.a) {
+        player.x -= speed;
+        gameMap.offsetX += speed;
+    }
+    if (keys.d) {
+        player.x += speed;
+        gameMap.offsetX -= speed;
+    }
+
+    // Karte und Spieler zeichnen
+    gameMap.draw(ctx);
+    player.draw(ctx, canvas.width, canvas.height);
+
+    // Nächsten Frame anfordern
+    requestAnimationFrame(animate);
+}
+
+// Karte und Spieler zeichnen, sobald beide Bilder geladen sind
 player.image.onload = gameMap.image.onload = function() {
-    draw();
+    animate(); // Starte die Animation
 };
