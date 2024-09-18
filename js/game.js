@@ -1,6 +1,7 @@
 // js/game.js
 import Player from './player.js'; // Importiere die Player-Klasse
 import GameMap from './map.js';   // Importiere die GameMap-Klasse
+import { collisionMap } from '/data/collisions.js'; // Importiere die Kollisionskarte
 
 // Spiel-Canvas und Kontext initialisieren
 const canvas = document.getElementById('gameCanvas');
@@ -9,6 +10,9 @@ const ctx = canvas.getContext('2d');
 // Setze eine feste Canvas-Größe
 canvas.width = 1024;  // Feste Breite des Canvas
 canvas.height = 576;  // Feste Höhe des Canvas
+
+console.log(collisionMap);
+
 
 // Spieler und Karte initialisieren
 const player = new Player(800, 600, './images/character-pictures/playerDown.png');
@@ -38,10 +42,8 @@ window.addEventListener('keyup', (e) => {
 // Zeichen- und Aktualisierungsfunktion (Game Loop)
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Canvas löschen
-    ctx.fillStyle = 'white'; // Hintergrundfarbe setzen
-    ctx.fillRect(0, 0, canvas.width, canvas.height); // Hintergrund zeichnen
 
-    const speed = 4;
+    const speed = 2;
 
     // Bewegung basierend auf Tastendrücken
     if (keys.w) {
