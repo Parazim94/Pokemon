@@ -6,6 +6,8 @@ class Player {
         this.image.src = imageSrc; // Quelle des Spritesheets
         this.frameWidth = 0; // Breite eines Frames (wird später festgelegt)
         this.frameHeight = 0; // Höhe eines Frames (wird später festgelegt)
+        this.width = 48; // Breite des Spielers
+        this.height = 48; // Höhe des Spielers
     }
 
     draw(ctx, canvasWidth, canvasHeight) {
@@ -25,7 +27,7 @@ class Player {
             this.frameWidth, // Zeichengröße: Breite
             this.frameHeight // Zeichengröße: Höhe
         );
-    }    
+    }
 }
 
 // Exportiere die Player-Klasse
