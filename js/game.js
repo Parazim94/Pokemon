@@ -21,6 +21,7 @@ const player = new Player({
 });
 const gameMap = new GameMap(
   "./images/map-pictures/Pellet Town.png",
+  "./images/map-pictures/foregroundObjects.png",
   -735,
   -650
 );
@@ -73,9 +74,10 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  gameMap.draw(ctx);
+  gameMap.draw(ctx); // Hintergrund zeichnen
   boundaries.forEach((boundary) => boundary.draw(ctx));
   player.draw(ctx);
+  gameMap.drawForeground(ctx); // Vordergrund zeichnen
 
   let moving = true;
   if (keys.w) {
