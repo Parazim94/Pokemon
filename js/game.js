@@ -18,7 +18,14 @@ const player = new Player({
   frames: {
     max: 4,
   },
+  sprites: {
+    up: "./images/character-pictures/playerUp.png",
+    down: "./images/character-pictures/playerDown.png",
+    left: "./images/character-pictures/playerLeft.png",
+    right: "./images/character-pictures/playerRight.png",
+  },
 });
+
 const gameMap = new GameMap(
   "./images/map-pictures/Pellet Town.png",
   "./images/map-pictures/foregroundObjects.png",
@@ -74,13 +81,17 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  gameMap.draw(ctx); // Hintergrund zeichnen
+  gameMap.draw(ctx);
   boundaries.forEach((boundary) => boundary.draw(ctx));
   player.draw(ctx);
-  gameMap.drawForeground(ctx); // Vordergrund zeichnen
+  gameMap.drawForeground(ctx);
 
   let moving = true;
+  player.moving = false;
+
   if (keys.w) {
+    player.moving = true;
+    player.image.src = player.sprites.up;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
@@ -103,6 +114,8 @@ function animate() {
       gameMap.offsetY += 3;
     }
   } else if (keys.a) {
+    player.moving = true;
+    player.image.src = player.sprites.left;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
@@ -125,6 +138,8 @@ function animate() {
       gameMap.offsetX += 3;
     }
   } else if (keys.s) {
+    player.moving = true;
+    player.image.src = player.sprites.down;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
@@ -147,6 +162,8 @@ function animate() {
       gameMap.offsetY -= 3;
     }
   } else if (keys.d) {
+    player.moving = true;
+    player.image.src = player.sprites.right;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
       if (
