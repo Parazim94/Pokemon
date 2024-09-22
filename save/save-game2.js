@@ -1,7 +1,6 @@
 import Player from "./player.js";
 import GameMap from "./map.js";
 import { collisionMap, Boundary } from "../data/collisions.js";
-import { battleZonesData } from "../data/battleZones.js"; // Importiere die battleZonesData
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -70,27 +69,6 @@ collisionMap.forEach((row, i) => {
   });
 });
 
-// Battle Zones erstellen
-const battleZones = [];
-const battleZonesMap = [];
-for (let i = 0; i < battleZonesData.length; i += 70) {
-  battleZonesMap.push(battleZonesData.slice(i, 70 + i));
-}
-battleZonesMap.forEach((row, i) => {
-  row.forEach((symbol, j) => {
-    if (symbol === 1025) {
-      battleZones.push(
-        new Boundary({
-          position: {
-            x: j * Boundary.width + gameMap.offsetX,
-            y: i * Boundary.height + gameMap.offsetY,
-          },
-        })
-      );
-    }
-  });
-});
-
 function rectangularCollision({ rectangle1, rectangle2 }) {
   return (
     rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
@@ -105,40 +83,8 @@ function animate() {
 
   gameMap.draw(ctx);
   boundaries.forEach((boundary) => boundary.draw(ctx));
-  battleZones.forEach((battleZone) => battleZone.draw(ctx)); // Zeichne die Battle Zones
   player.draw(ctx);
   gameMap.drawForeground(ctx);
-
-  // Battle Zone Kollisionsabfrage
-  if (keys.w || keys.a || keys.s || keys.d) {
-    for (let i = 0; i < battleZones.length; i++) {
-      const battleZone = battleZones[i];
-      const overlappingArea =
-        (Math.min(
-          player.position.x + player.width,
-          battleZone.position.x + battleZone.width
-        ) -
-          Math.max(player.position.x, battleZone.position.x)) *
-        (Math.min(
-          player.position.y + player.height,
-          battleZone.position.y + battleZone.height
-        ) -
-          Math.max(player.position.y, battleZone.position.y));
-
-      if (
-        rectangularCollision({
-          rectangle1: player,
-          rectangle2: battleZone,
-        }) &&
-        overlappingArea > (player.width * player.height) / 2 &&
-        Math.random() < 0.01 // Wahrscheinlichkeit für den Kampf
-      ) {
-        console.log("Battle Zone Collision Detected");
-        
-        break;
-      }
-    }
-  }
 
   let moving = true;
   player.moving = false;
@@ -165,9 +111,6 @@ function animate() {
       boundaries.forEach((movable) => {
         movable.position.y += 3;
       });
-      battleZones.forEach((movable) => {
-        movable.position.y += 3;
-      });
       gameMap.offsetY += 3;
     }
   } else if (keys.a) {
@@ -190,9 +133,6 @@ function animate() {
     }
     if (moving) {
       boundaries.forEach((movable) => {
-        movable.position.x += 3;
-      });
-      battleZones.forEach((movable) => {
         movable.position.x += 3;
       });
       gameMap.offsetX += 3;
@@ -219,9 +159,6 @@ function animate() {
       boundaries.forEach((movable) => {
         movable.position.y -= 3;
       });
-      battleZones.forEach((movable) => {
-        movable.position.y -= 3;
-      });
       gameMap.offsetY -= 3;
     }
   } else if (keys.d) {
@@ -244,9 +181,6 @@ function animate() {
     }
     if (moving) {
       boundaries.forEach((movable) => {
-        movable.position.x -= 3;
-      });
-      battleZones.forEach((movable) => {
         movable.position.x -= 3;
       });
       gameMap.offsetX -= 3;
